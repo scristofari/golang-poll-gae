@@ -11,7 +11,7 @@ import (
 )
 
 func init() {
-	api, err := endpoints.RegisterService(PollApi{}, "acropoll", "v1", "polls api", true)
+	api, err := endpoints.RegisterService(PollApi{}, "sparck", "v1", "polls api", true)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -22,6 +22,10 @@ func init() {
 	info.Name, info.HTTPMethod, info.Path = "add", "POST", "polls"
 	info = api.MethodByName("Get").Info()
 	info.Name, info.HTTPMethod, info.Path = "get", "GET", "polls/{uid}"
+	info = api.MethodByName("Put").Info()
+	info.Name, info.HTTPMethod, info.Path = "put", "PUT", "users/{uid}"
+	info = api.MethodByName("Delete").Info()
+	info.Name, info.HTTPMethod, info.Path = "delete", "DELETE", "users/{uid}"
 	info = api.MethodByName("Vote").Info()
 	info.Name, info.HTTPMethod, info.Path = "vote", "POST", "polls/{uid}/vote/{answer}"
 
