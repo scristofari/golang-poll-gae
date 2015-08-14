@@ -1,4 +1,4 @@
-## API crud written in go on appengine
+## API crud : go on appengine
 
 ###### Serve
 $ goapp serve
