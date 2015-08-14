@@ -121,6 +121,53 @@ func (PollApi) Get(c context.Context, r *GetRequest) (*Poll, error) {
 	return &p, nil
 }
 
+type PutRequest struct {
+	UID      *datastore.Key `json:"uid"`
+	Question string         `endpoints:"req"`
+	Answers  []Answer       `endpoints:"req"`
+}
+
+func (PollApi) Put(c context.Context, r *PutRequest) (*Poll, error) {
+	if err := checkReferer(c); err != nil {
+		return nil, err
+	}
+
+	var p Poll
+	err := datastore.RunInTransaction(c, func(c context.Context) error {
+		if err := datastore.Get(c, r.UID, &p); err == datastore.ErrNoSuchEntity {
+			return endpoints.NewNotFoundError("Poll not found")
+		} else if err != nil {
+			return endpoints.NewBadRequestError("Id not valid")
+		}
+
+		p.Question = r.Question
+		p.Answers = r.Answers
+
+		_, err := datastore.Put(c, r.UID, &p)
+
+		return err
+	}, nil)
+
+	p.UID = r.UID
+
+	return &p, err
+}
+
+type DeleteRequest struct {
+	UID *datastore.Key `json:"uid" endpoints:"req"`
+}
+
+func (PollApi) Delete(c context.Context, r *DeleteRequest) error {
+
+	if err := datastore.Delete(c, r.UID); err == datastore.ErrNoSuchEntity {
+		return endpoints.NewNotFoundError("Poll not found")
+	} else if err != nil {
+		return endpoints.NewBadRequestError("Id not valid")
+	}
+
+	return nil
+}
+
 type VoteRequest struct {
 	UID    *datastore.Key `json:"uid" endpoints:"req"`
 	Answer int            `json:"answer" endpoints:"req"`

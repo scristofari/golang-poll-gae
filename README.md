@@ -1,9 +1,7 @@
-# golang-poll-gae
-
-###### Poll Api on app engine
-
-###### Deploy
-$ goapp deploy
+# golang-poll-gae : API CRUD Poll on app engine
 
 ###### Serve
 $ goapp serve
+
+###### Deploy
+$ goapp deploy
