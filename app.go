@@ -5,9 +5,9 @@ import (
 	"time"
 
 	"github.com/GoogleCloudPlatform/go-endpoints/endpoints"
+	"golang.org/x/net/context"
 
-	"appengine"
-	"appengine/datastore"
+	"google.golang.org/appengine/datastore"
 )
 
 func init() {
@@ -16,7 +16,7 @@ func init() {
 		log.Fatal(err)
 	}
 
-	info = api.MethodByName("List").Info()
+	info := api.MethodByName("List").Info()
 	info.Name, info.HTTPMethod, info.Path = "list", "GET", "polls"
 	info = api.MethodByName("Add").Info()
 	info.Name, info.HTTPMethod, info.Path = "add", "POST", "polls"
@@ -41,7 +41,7 @@ type ListPolls struct {
 	Next  *QueryMarker `json:"next,omitempty"`
 }
 
-func (PollApi) List(c endpoints.Context, r *ListReqPolls) (*ListPolls, error) {
+func (PollApi) List(c context.Context, r *ListReqPolls) (*ListPolls, error) {
 
 	list := &ListPolls{Polls: make([]Poll, 0, r.Limit)}
 
@@ -78,7 +78,7 @@ type AddRequest struct {
 	Answers  []Answer `endpoints:"req"`
 }
 
-func (PollApi) Add(c endpoints.Context, r *AddRequest) (*Poll, error) {
+func (PollApi) Add(c context.Context, r *AddRequest) (*Poll, error) {
 	if err := checkReferer(c); err != nil {
 		return nil, err
 	}
@@ -108,7 +108,7 @@ type GetRequest struct {
 	UID *datastore.Key `json:"uid" endpoints:"req"`
 }
 
-func (PollApi) Get(c endpoints.Context, r *GetRequest) (*Poll, error) {
+func (PollApi) Get(c context.Context, r *GetRequest) (*Poll, error) {
 	var p Poll
 
 	if err := datastore.Get(c, r.UID, &p); err == datastore.ErrNoSuchEntity {
@@ -126,12 +126,12 @@ type VoteRequest struct {
 	Answer int            `json:"answer" endpoints:"req"`
 }
 
-func (PollApi) Vote(c endpoints.Context, r *VoteRequest) error {
+func (PollApi) Vote(c context.Context, r *VoteRequest) error {
 	if err := checkReferer(c); err != nil {
 		return err
 	}
 
-	return datastore.RunInTransaction(c, func(c appengine.Context) error {
+	return datastore.RunInTransaction(c, func(c context.Context) error {
 		var p Poll
 		if err := datastore.Get(c, r.UID, &p); err == datastore.ErrNoSuchEntity {
 			return endpoints.NewNotFoundError("Poll not found")

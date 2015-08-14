@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"appengine/datastore"
+	"google.golang.org/appengine/datastore"
 )
 
 type Poll struct {

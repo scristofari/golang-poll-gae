@@ -2,12 +2,10 @@ package poll
 
 import (
 	"errors"
-	"net/url"
 
-	"github.com/GoogleCloudPlatform/go-endpoints/endpoints"
-
-	"appengine"
-	"appengine/datastore"
+	"golang.org/x/net/context"
+	"google.golang.org/appengine"
+	"google.golang.org/appengine/datastore"
 )
 
 type QueryMarker struct {
@@ -30,21 +28,23 @@ func (qm *QueryMarker) UnmarshalJSON(buf []byte) error {
 	return nil
 }
 
-func checkReferer(c endpoints.Context) error {
+func checkReferer(c context.Context) error {
 	if appengine.IsDevAppServer() {
 		return nil
 	}
 
-	r := c.HTTPRequest().Referer()
-	u, err := url.Parse(r)
-	if err != nil {
-		c.Infof("malformed referer detected: %q", r)
-		return endpoints.NewUnauthorizedError("couldn't extract domain from referer")
-	}
+	/*
+		r := c.HTTPRequest().Referer()
+		u, err := url.Parse(r)
+		if err != nil {
+			c.Infof("malformed referer detected: %q", r)
+			return endpoints.NewUnauthorizedError("couldn't extract domain from referer")
+		}
 
-	if u.Host != appengine.AppID(c)+".appspot.com" {
-		c.Infof("unauthorized referer detected: %q", r)
-		return endpoints.NewUnauthorizedError("referer unauthorized")
-	}
+		if u.Host != appengine.AppID(c)+".appspot.com" {
+			c.Infof("unauthorized referer detected: %q", r)
+			return endpoints.NewUnauthorizedError("referer unauthorized")
+		}*/
+
 	return nil
 }
