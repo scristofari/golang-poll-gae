@@ -1,4 +1,4 @@
-# golang-poll-gae : API CRUD Poll on app engine
+## API crud written in go on appengine
 
 ###### Serve
 $ goapp serve
