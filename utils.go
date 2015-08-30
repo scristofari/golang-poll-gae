@@ -36,8 +36,7 @@ func checkReferer(c context.Context) error {
 		return nil
 	}
 
-	request := endpoints.HTTPRequest(c)
-	r := request.Referer()
+	r := endpoints.HTTPRequest(c).Referer()
 	u, err := url.Parse(r)
 	if err != nil {
 		return endpoints.NewUnauthorizedError("couldn't extract domain from referer")
