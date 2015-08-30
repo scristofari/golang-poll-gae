@@ -2,6 +2,9 @@ package poll
 
 import (
 	"errors"
+	"net/url"
+
+	"go-endpoints/endpoints"
 
 	"golang.org/x/net/context"
 	"google.golang.org/appengine"
@@ -33,18 +36,16 @@ func checkReferer(c context.Context) error {
 		return nil
 	}
 
-	/*
-		r := c.HTTPRequest().Referer()
-		u, err := url.Parse(r)
-		if err != nil {
-			c.Infof("malformed referer detected: %q", r)
-			return endpoints.NewUnauthorizedError("couldn't extract domain from referer")
-		}
+	request := endpoints.HTTPRequest(c)
+	r := request.Referer()
+	u, err := url.Parse(r)
+	if err != nil {
+		return endpoints.NewUnauthorizedError("couldn't extract domain from referer")
+	}
 
-		if u.Host != appengine.AppID(c)+".appspot.com" {
-			c.Infof("unauthorized referer detected: %q", r)
-			return endpoints.NewUnauthorizedError("referer unauthorized")
-		}*/
+	if u.Host != appengine.AppID(c)+".appspot.com" {
+		return endpoints.NewUnauthorizedError("referer unauthorized")
+	}
 
 	return nil
 }
