@@ -23,9 +23,9 @@ func init() {
 	info = api.MethodByName("Get").Info()
 	info.Name, info.HTTPMethod, info.Path = "get", "GET", "polls/{uid}"
 	info = api.MethodByName("Put").Info()
-	info.Name, info.HTTPMethod, info.Path = "put", "PUT", "users/{uid}"
+	info.Name, info.HTTPMethod, info.Path = "put", "PUT", "polls/{uid}"
 	info = api.MethodByName("Delete").Info()
-	info.Name, info.HTTPMethod, info.Path = "delete", "DELETE", "users/{uid}"
+	info.Name, info.HTTPMethod, info.Path = "delete", "DELETE", "polls/{uid}"
 	info = api.MethodByName("Vote").Info()
 	info.Name, info.HTTPMethod, info.Path = "vote", "POST", "polls/{uid}/vote/{answer}"
 
