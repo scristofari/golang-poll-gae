@@ -4,8 +4,7 @@ import (
 	"errors"
 	"net/url"
 
-	"go-endpoints/endpoints"
-
+	"github.com/GoogleCloudPlatform/go-endpoints/endpoints"
 	"golang.org/x/net/context"
 	"google.golang.org/appengine"
 	"google.golang.org/appengine/datastore"
